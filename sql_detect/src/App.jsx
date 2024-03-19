@@ -77,33 +77,36 @@ const InputForm = () => {
     try {
       
       const response = await axios.post(
-        "http://localhost:8000/api/calculate",
+        "http://localhost:8080/predict",
         formData
       );
      
-      const parts = response.data.split("\r\n");
-      console.log(parts);
-      const numbers = parts
-        .filter((part) => part.trim() !== "") 
-        .map((part) => parseInt(part.replace(/\D/g, ""), 10)); 
-      console.log(numbers);
-      if (numbers[0] == 1) {
+      // console.log(response.data);
+      const numbers = response.data;
+      // console.log(numbers.knn_output);
+      if (numbers.knn_output[0] == 1) {
         setSqlknnoutput("Malicious");
         setisMalicious(true);
       } else {
         setSqlknnoutput("Not Malicious");
+        setisMalicious(false);
       }
-      if (numbers[1] == 1) {
+      if (numbers.lr_output[0] == 1) {
         setSqllroutput("Malicious");
         setisMalicious(true);
       } else {
         setSqllroutput("Not Malicious");
+        setisMalicious(false);
+
       }
-      if (numbers[2] == 1) {
+      if (numbers.ridge_output[0] == 1) {
         setSqlregoutput("Malicious");
         setisMalicious(true);
+
       } else {
         setSqlregoutput("Not Malicious");
+        setisMalicious(false);
+
       }
     } catch (error) {
       console.error("Error:", error);
